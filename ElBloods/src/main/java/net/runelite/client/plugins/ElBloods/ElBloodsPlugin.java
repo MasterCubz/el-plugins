@@ -54,11 +54,11 @@ import static net.runelite.client.plugins.ElBloods.ElBloodsState.*;
 @Extension
 @PluginDependency(BotUtils.class)
 @PluginDescriptor(
-	name = "El Bloods",
-	enabledByDefault = false,
-	description = "Crafts blood runes",
-	tags = {"craft, blood, runecraft, el"},
-	type = PluginType.SKILLING
+		name = "El Bloods",
+		enabledByDefault = false,
+		description = "Crafts blood runes",
+		tags = {"craft, blood, runecraft, el"},
+		type = PluginType.SKILLING
 )
 @Slf4j
 public class ElBloodsPlugin extends Plugin
@@ -104,10 +104,10 @@ public class ElBloodsPlugin extends Plugin
 	WorldArea START_CHISELING_AREA = new WorldArea(new WorldPoint(1720, 3874, 0), new WorldPoint(1734, 3881, 0));
 
 
-	WorldArea FIRST_CLICK_SOUL_ALTAR_AREA = new WorldArea(new WorldPoint(1763,3894,0),new WorldPoint(1768,3899,0));
+	WorldArea FIRST_CLICK_SOUL_ALTAR_AREA = new WorldArea(new WorldPoint(1760,3893,0),new WorldPoint(1768,3899,0));
 	WorldPoint FIRST_CLICK_SOUL_ALTAR_POINT = new WorldPoint(1763,3896,0);
 
-	WorldArea SECOND_CLICK_SOUL_ALTAR_AREA = new WorldArea(new WorldPoint(1801,3890,0),new WorldPoint(1806,3895,0));
+	WorldArea SECOND_CLICK_SOUL_ALTAR_AREA = new WorldArea(new WorldPoint(1800,3889,0),new WorldPoint(1806,3895,0));
 	WorldPoint SECOND_CLICK_SOUL_ALTAR_POINT = new WorldPoint(1803,3892,0);
 
 	WorldPoint SOUL_ALTAR_POINT = new WorldPoint(1816,3856,0);
@@ -264,14 +264,14 @@ public class ElBloodsPlugin extends Plugin
 		return null;
 	}
 
-    private void handleDropExcept()
-    {
-        switch (config.mode()) {
+	private void handleDropExcept()
+	{
+		switch (config.mode()) {
 			case BLOOD_RUNES:
 			case SOUL_RUNES:
 				utils.inventoryItemsCombine(Collections.singleton(13446), 1755,38, false,true, config.sleepMin(), config.sleepMax());
 		}
-    }
+	}
 
 	public ElBloodsState getState()
 	{
@@ -490,7 +490,12 @@ public class ElBloodsPlugin extends Plugin
 					targetMenu = new MenuEntry("Climb", "<col=ffff>Rocks", targetGroundObject.getId(), 3,
 							targetGroundObject.getLocalLocation().getSceneX(), targetGroundObject.getLocalLocation().getSceneY(), false);
 					utils.setMenuEntry(targetMenu);
-					utils.delayMouseClick(targetGroundObject.getConvexHull().getBounds(), sleepDelay());
+					if(targetGroundObject.getConvexHull()!=null){
+						utils.delayMouseClick(targetGroundObject.getConvexHull().getBounds(), sleepDelay());
+					} else {
+						utils.delayMouseClick(new Point(0,0),sleepDelay());
+					}
+
 				}
 				break;
 			case WALK_TO_ESSENCE:
@@ -718,7 +723,7 @@ public class ElBloodsPlugin extends Plugin
 				} else if (player.getWorldLocation().equals(new WorldPoint(1719,3828,0))){ //blood altar
 					return CHISEL_AT_ALTAR;
 				} else if (player.getWorldArea().intersectsWith(FIRST_CLICK_SOUL_ALTAR_AREA)){ //blood altar
-						return WALK_SOUL_ALTAR_2;
+					return WALK_SOUL_ALTAR_2;
 				} else if (player.getWorldArea().intersectsWith(SECOND_CLICK_SOUL_ALTAR_AREA)){ //blood altar
 					return CLICK_SOUL_ALTAR;
 				}
