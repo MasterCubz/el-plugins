@@ -586,9 +586,19 @@ public class ElMessHallPlugin extends Plugin
 				client.setVar(VarClientStr.INPUT_TEXT,String.valueOf(amount-utils.getInventoryItemCount(1923,false)));
 				client.runScript(681);
 				client.runScript(ScriptID.MESSAGE_LAYER_CLOSE);
-			}else if(client.getWidget(242,3)!=null&&!client.getWidget(242,3).isHidden()){
-				targetMenu=new MenuEntry("","",5,57,0,15859715,false);
-				utils.delayMouseClick(client.getWidget(242,3).getChild(1).getBounds(),sleepDelay());
+			} else if(client.getWidget(242,3)!=null&&!client.getWidget(242,3).isHidden()){
+				if(client.getWidget(242,3).getChild(0).getName().contains("dish")){
+					targetObject=utils.findNearestGameObject(27375);
+					if(targetObject!=null){
+						targetMenu=new MenuEntry("","",targetObject.getId(),3,targetObject.getSceneMinLocation().getX(),targetObject.getSceneMinLocation().getY(),false);
+						utils.delayMouseClick(targetObject.getConvexHull().getBounds(),sleepDelay());
+					}
+					return;
+				} else {
+					targetMenu = new MenuEntry("", "", 5, 57, 0, 15859715, false);
+					utils.delayMouseClick(client.getWidget(242, 3).getChild(1).getBounds(), sleepDelay());
+					return;
+				}
 			}else{
 				targetObject=utils.findNearestGameObject(27375);
 				if(targetObject!=null){
@@ -1158,18 +1168,26 @@ public class ElMessHallPlugin extends Plugin
 			}
 		}
 		while (world != currentWorld);
-
 		if (world == currentWorld)
 		{
-			String chatMessage = new ChatMessageBuilder()
-					.append(ChatColorType.NORMAL)
-					.append("Couldn't find a world to quick-hop to.")
-					.build();
+			if(world.getId()==535){
+				hop(302);
+				return;
+			} else {
+				String chatMessage = new ChatMessageBuilder()
+						.append(ChatColorType.NORMAL)
+						.append("Couldn't find a world to quick-hop to.")
+						.build();
+			}
 		}
 		else
 		{
-			log.info("attempting to hop worlds (3)");
-			hop(world.getId());
+			if(world.getId()==318 || world.getId()==319){
+				hop(320);
+			} else {
+				log.info("attempting to hop worlds (3)");
+				hop(world.getId());
+			}
 		}
 	}
 
