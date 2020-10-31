@@ -31,5 +31,6 @@ public enum ElAstralsState
 	EMPTY_LARGE,
 	EMPTY_MEDIUM,
 	POUCH_DEGRADED,
+	ON_BREAK,
 	UNKNOWN;
 }

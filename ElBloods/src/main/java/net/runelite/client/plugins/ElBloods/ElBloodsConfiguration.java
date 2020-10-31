@@ -138,7 +138,7 @@ public interface ElBloodsConfiguration extends Config
 
 	@Range(
 		min = 0,
-		max = 10
+		max = 25
 	)
 	@ConfigItem(
 		keyName = "tickDelayMin",
@@ -154,7 +154,7 @@ public interface ElBloodsConfiguration extends Config
 
 	@Range(
 		min = 0,
-		max = 10
+		max = 25
 	)
 	@ConfigItem(
 		keyName = "tickDelayMax",
@@ -170,7 +170,7 @@ public interface ElBloodsConfiguration extends Config
 
 	@Range(
 		min = 0,
-		max = 10
+		max = 25
 	)
 	@ConfigItem(
 		keyName = "tickDelayTarget",

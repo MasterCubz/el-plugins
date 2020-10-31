@@ -253,6 +253,9 @@ public class ElAstralsPlugin extends Plugin
 				fixDegradedPouch();
 				tickTimer=tickDelay();
 				break;
+			case ON_BREAK:
+				tickTimer=tickDelay();
+				break;
 		}
 	}
 
@@ -284,6 +287,9 @@ public class ElAstralsPlugin extends Plugin
 		Player player = client.getLocalPlayer();
 		if(player==null){
 			return NULL_PLAYER;
+		}
+		if(chinBreakHandler.isBreakActive(this)){
+			return ON_BREAK;
 		}
 		if(player.getPoseAnimation()!=813){
 			if(player.getWorldArea().intersectsWith(FIRST_CLICK_AREA)){
@@ -329,14 +335,14 @@ public class ElAstralsPlugin extends Plugin
 				{
 					return HANDLE_BREAK;
 				}
-				if(utils.inventoryContains(ASTRAL_ID)){
+				else if(utils.inventoryContains(ASTRAL_ID)){
 					if(!utils.isBankOpen()){
 						return OPENING_BANK;
 					} else {
 						return DEPOSIT_INVENT;
 					}
 				}
-				if(!utils.isBankOpen()){
+				else if(!utils.isBankOpen()){
 					return OPENING_BANK;
 				} else {
 					return fillPouches();
