@@ -142,9 +142,17 @@ public class ElZMIPlugin extends Plugin
 	{
 		runecraftProgress = 0;
 		if(config.giantPouch()){
-			REQUIRED_ITEMS = List.of(5509,5510,5512,5514,12791);
+			if(config.trouver()){
+				REQUIRED_ITEMS = List.of(5509,5510,5512,5514,24416);
+			} else {
+				REQUIRED_ITEMS = List.of(5509,5510,5512,5514,12791);
+			}
 		} else {
-			REQUIRED_ITEMS = List.of(5509,5510,5512,12791);
+			if(config.trouver()){
+				REQUIRED_ITEMS = List.of(5509,5510,5512,24416);
+			} else {
+				REQUIRED_ITEMS = List.of(5509,5510,5512,12791);
+			}
 		}
 		DEGRADED_POUCHES = List.of(5511,5513,5515);
 		RUNE_IDS = List.of(557,556,566,560,561,564,559,562,554,555,565);

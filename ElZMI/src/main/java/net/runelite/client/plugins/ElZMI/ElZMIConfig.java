@@ -60,6 +60,14 @@ public interface ElZMIConfig extends Config
 	default boolean daeyalt() { return false; }
 
 	@ConfigItem(
+			keyName = "trouver",
+			name = "Use Trouver Rune Pouch",
+			description = "Use Trouver Rune Pouch",
+			position = 2
+	)
+	default boolean trouver() { return false; }
+
+	@ConfigItem(
 			keyName = "dropRunes",
 			name = "Drop Runes",
 			description = "Drop runes at altar",
