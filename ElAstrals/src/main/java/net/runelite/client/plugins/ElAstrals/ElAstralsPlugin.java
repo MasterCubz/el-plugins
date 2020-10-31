@@ -366,9 +366,9 @@ public class ElAstralsPlugin extends Plugin
 
 	private void openLunarBank()
 	{
+		firstClickOnAltar=false;
 		if(config.dreamMentor()){
 			targetObject = utils.findNearestGameObject(16700);
-			firstClickOnAltar=false;
 			if(targetObject!=null){
 				targetMenu = new MenuEntry("Bank", "<col=ffff>Bank booth", targetObject.getId(), 4, targetObject.getSceneMinLocation().getX(), targetObject.getSceneMinLocation().getY(), false);
 				utils.delayMouseClick(getRandomNullPoint(),sleepDelay());
