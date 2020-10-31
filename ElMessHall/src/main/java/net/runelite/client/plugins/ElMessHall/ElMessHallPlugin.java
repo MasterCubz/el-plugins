@@ -626,7 +626,7 @@ public class ElMessHallPlugin extends Plugin
 				client.runScript(ScriptID.MESSAGE_LAYER_CLOSE);
 			}else if(client.getWidget(242,3)!=null&&!client.getWidget(242,3).isHidden()){
 				targetMenu=new MenuEntry("","",5,57,2,15859715,false);
-				utils.delayMouseClick(client.getWidget(242,3).getChild(1).getBounds(),sleepDelay());
+				utils.delayMouseClick(client.getWidget(242,3).getChild(2).getBounds(),sleepDelay());
 			}else{
 				targetObject=utils.findNearestGameObject(27375);
 				if(targetObject!=null){
