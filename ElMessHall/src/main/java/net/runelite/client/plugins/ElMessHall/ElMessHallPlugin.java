@@ -853,7 +853,7 @@ public class ElMessHallPlugin extends Plugin
 	}
 
 	private void getPineapples(){
-		if(!utils.inventoryContains(13410)){
+		if(!utils.inventoryItemContainsAmount(13410,13,false,true)){
 			if(client.getWidget(162,45)!=null&&!client.getWidget(162,45).isHidden()){
 				client.setVar(VarClientInt.INPUT_TYPE,7);
 				client.setVar(VarClientStr.INPUT_TEXT,String.valueOf(13-utils.getInventoryItemCount(13407,false)));

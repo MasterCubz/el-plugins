@@ -37,6 +37,7 @@ import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
+import net.runelite.api.queries.TileQuery;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -100,6 +101,8 @@ public class ElTeaksPlugin extends Plugin
 
 	WorldArea SOUTH_SHORTCUT = new WorldArea(new WorldPoint(3713,3800,0),new WorldPoint(3744,3817,0));
 
+	List<Integer> REQUIRED_ITEMS = new ArrayList<>();
+
 	int timeout = 0;
 	int teaksCut;
 	long sleepLength;
@@ -137,6 +140,7 @@ public class ElTeaksPlugin extends Plugin
 		skillLocation = null;
 		startTeaks = false;
 		oldInventCount=-1;
+		REQUIRED_ITEMS = List.of(5070,5071,5072,5073,5074,5075,7413,13653,19712,19714,19716,19718,22798,22800,23127);
 	}
 
 	@Subscribe
@@ -247,6 +251,8 @@ public class ElTeaksPlugin extends Plugin
 		}
 		else if(utils.isBankOpen()){
 			return getBankState();
+		} else if(checkForGroundItems()) {
+			return PICKING_UP;
 		}
 		else if(client.getLocalPlayer().getAnimation()!=-1){
 			return ANIMATING;
@@ -392,5 +398,22 @@ public class ElTeaksPlugin extends Plugin
 			}
 			oldInventCount=event.getItemContainer().count(6333);
 		}
+	}
+
+	private boolean checkForGroundItems()
+	{
+		for(Tile tile : new TileQuery().isWithinDistance(client.getLocalPlayer().getWorldLocation(),10).result(client)) {
+			if(tile.getGroundItems()!=null){
+				for(TileItem tileItem : tile.getGroundItems()){
+					if(REQUIRED_ITEMS.contains(tileItem.getId())){
+						targetMenu = new MenuEntry ("Take", "<col=ff9040>",tileItem.getId(),20,tileItem.getTile().getX(),tileItem.getTile().getY(),false);
+						utils.setMenuEntry(targetMenu);
+						utils.delayMouseClick(new Point(0,0),sleepDelay());
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }
