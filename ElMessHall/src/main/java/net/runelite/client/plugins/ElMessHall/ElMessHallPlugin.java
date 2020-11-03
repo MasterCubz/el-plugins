@@ -259,8 +259,6 @@ public class ElMessHallPlugin extends Plugin
 		{
 			return HANDLE_BREAK;
 		} else if(client.getWidget(149,0)==null || client.getWidget(149,0).isHidden()){
-			targetMenu=new MenuEntry("","",1,57,-1,10551353,false);
-			utils.delayMouseClick(client.getWidget(161,64).getBounds(),sleepDelay());
 			return FIXING_TAB;
 		}
 		else {
@@ -386,6 +384,14 @@ public class ElMessHallPlugin extends Plugin
 					utils.handleRun(30, 20);
 					timeout = 1+tickDelay();
 					break;
+				case FIXING_TAB:
+					if(client.getWidget(161,64)!=null && !client.getWidget(161,64).isHidden()){
+						targetMenu=new MenuEntry("","",1,57,-1,10551353,false);
+						utils.delayMouseClick(client.getWidget(161,64).getBounds(),sleepDelay());
+						timeout = 1+tickDelay();
+					}
+					break;
+
 			}
 		}
 	}
