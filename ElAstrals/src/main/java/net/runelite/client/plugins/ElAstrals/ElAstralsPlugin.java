@@ -202,9 +202,7 @@ public class ElAstralsPlugin extends Plugin
 			case TICK_TIMER:
 				break;
 			case MOVING:
-				if(config.noStams()){
-					shouldRun();
-				}
+				shouldRun();
 				break;
 			case OPENING_BANK:
 				if(client.getLocalPlayer().getWorldArea().intersectsWith(LUNAR_TELE_SPOT) || client.getLocalPlayer().getWorldArea().intersectsWith(LUNAR_BANK) ){
