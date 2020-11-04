@@ -50,6 +50,7 @@ import net.runelite.client.plugins.botutils.BotUtils;
 import net.runelite.client.ui.overlay.OverlayManager;
 import org.pf4j.Extension;
 import static net.runelite.client.plugins.ElAirs.ElAirsState.*;
+import static net.runelite.client.plugins.ElAirs.ElAirsType.*;
 
 
 @Extension
@@ -98,6 +99,7 @@ public class ElAirsPlugin extends Plugin
 	LocalPoint beforeLoc;
 	Player player;
 	Rectangle altRect = new Rectangle(-100,-100, 10, 10);
+	Rectangle clickBounds;
 
 	WorldArea FALADOR_EAST_BANK = new WorldArea(new WorldPoint(3009,3353,0),new WorldPoint(3019,3359,0));
 	WorldArea FIRST_POINT = new WorldArea(new WorldPoint(3004,3314,0),new WorldPoint(3009,3319,0));
@@ -217,9 +219,18 @@ public class ElAirsPlugin extends Plugin
 	private ElAirsState getBankState()
 	{
 		if(utils.inventoryFull()){
+			if(config.mode().equals(TIARAS)){
+				if(utils.inventoryItemContainsAmount(5525,14,false,true)
+						&& utils.inventoryItemContainsAmount(1438,14,false,true)){
+					return WALK_FIRST_POINT;
+				} else {
+					utils.depositAll();
+					return UNHANDLED_STATE;
+				}
+			}
 			return WALK_FIRST_POINT;
 		}
-		else if(utils.inventoryContains(556)){
+		if(utils.inventoryContains(556) || utils.inventoryContains(5527)){
 			return DEPOSIT_ITEMS;
 		} else {
 			return WITHDRAW_ITEMS;
@@ -291,15 +302,31 @@ public class ElAirsPlugin extends Plugin
 					timeout = tickDelay();
 					break;
 				case DEPOSIT_ITEMS:
-					depositItem(556);
+					if(config.mode().equals(RUNES)){
+						depositItem(556);
+					} else if(config.mode().equals(TIARAS)){
+						depositItem(5527);
+					}
 					timeout = tickDelay();
 					break;
 				case WITHDRAW_ITEMS:
-					utils.withdrawAllItem(essenceValue);
+					if(config.mode().equals(RUNES)){
+						utils.withdrawAllItem(essenceValue);
+					} else if(config.mode().equals(TIARAS)){
+						if(!utils.inventoryItemContainsAmount(5525,14,false,true)){
+							withdrawX(5525);
+						} else if(!utils.inventoryItemContainsAmount(1438,14,false,true)){
+							withdrawX(1438);
+						}
+					}
 					timeout = tickDelay();
 					break;
 				case ENTER_ALTAR:
-					useTalismanOnAltar();
+					if(utils.inventoryContains(1438)){
+						useTalismanOnAltar();
+					} else {
+						useGameObject(34813,3);
+					}
 					timeout = tickDelay();
 					break;
 				case CRAFT_RUNES:
@@ -318,6 +345,12 @@ public class ElAirsPlugin extends Plugin
 					utils.walk(FIRST_CLICK,1,sleepDelay());
 					timeout = tickDelay();
 					break;
+				case CRAFT_TIARAS:
+					client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+					client.setSelectedItemSlot(utils.getInventoryWidgetItem(1438).getIndex());
+					client.setSelectedItemID(1438);
+					useGameObject(34760,1);
+					break;
 			}
 		}
 	}
@@ -335,22 +368,47 @@ public class ElAirsPlugin extends Plugin
 	private ElAirsState getAirsState()
 	{
 		utils.setMenuEntry(null);
-		if(utils.inventoryContains(essenceValue)){
-			if(player.getWorldArea().intersectsWith(FIRST_POINT)){
-				return ENTER_ALTAR;
-			} else if (player.getWorldArea().intersectsWith(AIR_ALTAR)){
-				return CRAFT_RUNES;
+		if(config.mode().equals(RUNES)){
+			if(utils.inventoryContains(essenceValue)){
+				if(player.getWorldArea().intersectsWith(FIRST_POINT)){
+					return ENTER_ALTAR;
+				} else if (player.getWorldArea().intersectsWith(AIR_ALTAR)){
+					return CRAFT_RUNES;
+				}
 			}
-		} else {
-			if (player.getWorldArea().intersectsWith(AIR_ALTAR)){
-				return USE_PORTAL;
-			} else if (player.getWorldLocation().equals(OUTSIDE_ALTAR)){
-				return WALK_SECOND_POINT;
-			} else if (player.getWorldArea().intersectsWith(SECOND_POINT)){
-				return FIND_BANK;
-			} else if (player.getWorldArea().intersectsWith(FALADOR_EAST_BANK)){
-				return FIND_BANK;
+			else {
+				if (player.getWorldArea().intersectsWith(AIR_ALTAR)){
+					return USE_PORTAL;
+				} else if (player.getWorldLocation().equals(OUTSIDE_ALTAR)){
+					return WALK_SECOND_POINT;
+				} else if (player.getWorldArea().intersectsWith(SECOND_POINT)){
+					return FIND_BANK;
+				} else if (player.getWorldArea().intersectsWith(FALADOR_EAST_BANK)){
+					return FIND_BANK;
+				}
 			}
+			return UNHANDLED_STATE;
+		}
+		else if(config.mode().equals(TIARAS)){
+			if(utils.inventoryContains(5525)){
+				if(player.getWorldArea().intersectsWith(FIRST_POINT)){
+					return ENTER_ALTAR;
+				} else if (player.getWorldArea().intersectsWith(AIR_ALTAR)){
+					return CRAFT_TIARAS;
+				}
+			}
+			else {
+				if (player.getWorldArea().intersectsWith(AIR_ALTAR)){
+					return USE_PORTAL;
+				} else if (player.getWorldLocation().equals(OUTSIDE_ALTAR)){
+					return WALK_SECOND_POINT;
+				} else if (player.getWorldArea().intersectsWith(SECOND_POINT)){
+					return FIND_BANK;
+				} else if (player.getWorldArea().intersectsWith(FALADOR_EAST_BANK)){
+					return FIND_BANK;
+				}
+			}
+			return UNHANDLED_STATE;
 		}
 		return UNHANDLED_STATE;
 	}
@@ -365,7 +423,7 @@ public class ElAirsPlugin extends Plugin
 		targetObject = utils.findNearestGameObject(34813);
 		if(targetObject!=null){
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
-			client.setSelectedItemSlot(0);
+			client.setSelectedItemSlot(utils.getInventoryWidgetItem(1438).getIndex());
 			client.setSelectedItemID(1438);
 			targetMenu = new MenuEntry("","",targetObject.getId(),1,targetObject.getSceneMinLocation().getX(),targetObject.getSceneMinLocation().getY(),false);
 			utils.setMenuEntry(targetMenu);
@@ -393,5 +451,17 @@ public class ElAirsPlugin extends Plugin
 		targetMenu = new MenuEntry("", "", 8, 57, utils.getInventoryWidgetItem(id).getIndex(),983043,false);
 		utils.setMenuEntry(targetMenu);
 		utils.delayMouseClick(utils.getInventoryWidgetItem(id).getCanvasBounds(),sleepDelay());
+	}
+
+	private void withdrawX(int ID){
+		if(client.getVarbitValue(3960)!=14){
+			utils.withdrawItemAmount(ID,14);
+			timeout+=3;
+		} else {
+			targetMenu = new MenuEntry("", "", (client.getVarbitValue(6590) == 3) ? 1 : 5, MenuOpcode.CC_OP.getId(), utils.getBankItemWidget(ID).getIndex(), 786444, false);
+			utils.setMenuEntry(targetMenu);
+			clickBounds = utils.getBankItemWidget(ID).getBounds()!=null ? utils.getBankItemWidget(ID).getBounds() : new Rectangle(client.getCenterX() - 50, client.getCenterY() - 50, 100, 100);
+			utils.delayMouseClick(clickBounds,sleepDelay());
+		}
 	}
 }

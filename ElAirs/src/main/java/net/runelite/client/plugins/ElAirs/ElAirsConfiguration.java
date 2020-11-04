@@ -247,6 +247,18 @@ public interface ElAirsConfiguration extends Config
 	}
 
 	@ConfigItem(
+			keyName = "mode",
+			name = "Select Mode",
+			description = "Select which mode you would like to run.",
+			position = 138,
+			titleSection = "elAirsTitle"
+	)
+	default ElAirsType mode()
+	{
+		return ElAirsType.RUNES;
+	}
+
+	@ConfigItem(
 			keyName = "useRuneEssence",
 			name = "Use Rune Essence",
 			description = "Enable to use rune essence.",
