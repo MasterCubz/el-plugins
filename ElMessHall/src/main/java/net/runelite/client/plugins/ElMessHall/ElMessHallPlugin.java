@@ -316,6 +316,7 @@ public class ElMessHallPlugin extends Plugin
 						addPineapples();
 						break;
 				}
+				state = MAKING_PIZZA;
 				break;
 			case MEAT_PIE:
 				switch (pizzaProgress) {
@@ -329,6 +330,7 @@ public class ElMessHallPlugin extends Plugin
 						makeUncookedPies();
 						break;
 				}
+				state = MAKING_PIE;
 				break;
 			case STEW:
 				switch (pizzaProgress) {
@@ -339,6 +341,7 @@ public class ElMessHallPlugin extends Plugin
 						makeUncookedStews();
 						break;
 				}
+				state = MAKING_STEW;
 				break;
 		}
 
@@ -411,6 +414,10 @@ public class ElMessHallPlugin extends Plugin
 		if(utils.inventoryEmpty()){
 			pizzaProgress=0;
 		}
+		if(utils.inventoryContains(2305)){
+			dropItem(2305);
+			return DROP_BURNT;
+		}
 		switch (pizzaProgress) {
 			case 0:
 				getKnife();
@@ -461,7 +468,7 @@ public class ElMessHallPlugin extends Plugin
 				hopWorlds();
 				break;
 		}
-		 return UNHANDLED_STATE;
+		 return MAKING_PIZZA;
 	}
 
 	private ElMessHallState getPieState()
@@ -469,6 +476,13 @@ public class ElMessHallPlugin extends Plugin
 		/*if(utils.inventoryEmpty() && pizzaProgress!=12){
 			pizzaProgress=0;
 		}*/
+		if(utils.inventoryContains(2146)){
+			dropItem(2146);
+			return DROP_BURNT;
+		} else if(utils.inventoryContains(2329)){
+			dropItem(2329);
+			return DROP_BURNT;
+		}
 		switch (pizzaProgress) {
 			case 0:
 				getFlour(14);
@@ -511,11 +525,18 @@ public class ElMessHallPlugin extends Plugin
 				hopWorlds();
 				break;
 		}
-		return UNHANDLED_STATE;
+		return MAKING_PIE;
 	}
 
 	private ElMessHallState getStewState()
 	{
+		if(utils.inventoryContains(2146)){
+			dropItem(2146);
+			return DROP_BURNT;
+		} else if(utils.inventoryContains(2005)){
+			dropItem(2005);
+			return DROP_BURNT;
+		}
 		switch (pizzaProgress) {
 			case 0:
 				getBowls(14);
@@ -549,7 +570,7 @@ public class ElMessHallPlugin extends Plugin
 				hopWorlds();
 				break;
 		}
-		return UNHANDLED_STATE;
+		return MAKING_STEW;
 	}
 
 
@@ -561,6 +582,11 @@ public class ElMessHallPlugin extends Plugin
 			client.invokeMenuAction(targetMenu.getOption(),targetMenu.getTarget(),targetMenu.getIdentifier(),targetMenu.getOpcode(),targetMenu.getParam0(),targetMenu.getParam1());
 			targetMenu=null;
 		}
+	}
+
+	private void dropItem(int item){
+		targetMenu = new MenuEntry("","",item,37,utils.getInventoryWidgetItem(item).getIndex(),9764864,false);
+		utils.delayMouseClick(utils.getInventoryWidgetItem(item).getCanvasBounds(), sleepDelay());
 	}
 
 	private void getKnife(){
