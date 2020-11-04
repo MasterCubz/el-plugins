@@ -241,9 +241,21 @@ public interface ElAirsConfiguration extends Config
 		description = "",
 		position = 60
 	)
-	default Title teaksTitle()
+	default Title elAirsTitle()
 	{
 		return new Title();
+	}
+
+	@ConfigItem(
+			keyName = "useRuneEssence",
+			name = "Use Rune Essence",
+			description = "Enable to use rune essence.",
+			position = 139,
+			titleSection = "elAirsTitle"
+	)
+	default boolean useRuneEssence()
+	{
+		return true;
 	}
 
 	@ConfigItem(

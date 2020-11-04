@@ -101,7 +101,7 @@ public class ElAirsPlugin extends Plugin
 
 	WorldArea FALADOR_EAST_BANK = new WorldArea(new WorldPoint(3009,3353,0),new WorldPoint(3019,3359,0));
 	WorldArea FIRST_POINT = new WorldArea(new WorldPoint(3004,3314,0),new WorldPoint(3009,3319,0));
-	WorldArea SECOND_POINT = new WorldArea(new WorldPoint(3003,3325,0),new WorldPoint(3010,3332,0));
+	WorldArea SECOND_POINT = new WorldArea(new WorldPoint(3003,3325,0),new WorldPoint(3010,3333,0));
 	WorldArea AIR_ALTAR = new WorldArea(new WorldPoint(2839,4826,0),new WorldPoint(2849,4840,0));
 
 	WorldPoint FIRST_CLICK = new WorldPoint(3006,3315,0);
@@ -109,10 +109,9 @@ public class ElAirsPlugin extends Plugin
 	WorldPoint OUTSIDE_ALTAR = new WorldPoint(2983,3288,0);
 
 	int timeout = 0;
-	int teaksCut;
 	long sleepLength;
 	boolean startTeaks;
-	int oldInventCount = -1;
+	int essenceValue;
 
 
 	@Provides
@@ -143,8 +142,11 @@ public class ElAirsPlugin extends Plugin
 		timeout = 0;
 		botTimer = null;
 		skillLocation = null;
-		startTeaks = false;
-		oldInventCount=-1;
+		if(config.useRuneEssence()){
+			essenceValue = 1436;
+		} else {
+			essenceValue = 7936;
+		}
 	}
 
 	@Subscribe
@@ -268,6 +270,7 @@ public class ElAirsPlugin extends Plugin
 			}
 			state = getState();
 			beforeLoc = player.getLocalLocation();
+			utils.setMenuEntry(null);
 			switch (state)
 			{
 				case TIMEOUT:
@@ -292,7 +295,7 @@ public class ElAirsPlugin extends Plugin
 					timeout = tickDelay();
 					break;
 				case WITHDRAW_ITEMS:
-					utils.withdrawAllItem(1436);
+					utils.withdrawAllItem(essenceValue);
 					timeout = tickDelay();
 					break;
 				case ENTER_ALTAR:
@@ -332,7 +335,7 @@ public class ElAirsPlugin extends Plugin
 	private ElAirsState getAirsState()
 	{
 		utils.setMenuEntry(null);
-		if(utils.inventoryContains(1436)){
+		if(utils.inventoryContains(essenceValue)){
 			if(player.getWorldArea().intersectsWith(FIRST_POINT)){
 				return ENTER_ALTAR;
 			} else if (player.getWorldArea().intersectsWith(AIR_ALTAR)){
