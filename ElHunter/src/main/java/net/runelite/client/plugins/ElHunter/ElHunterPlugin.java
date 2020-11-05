@@ -478,7 +478,7 @@ public class ElHunterPlugin extends Plugin
 						return CHECKING_TRAP;
 					}
 				} else if(utils.getLocalGameObjects(10,9379).size()>0){
-					targetObject=utils.findNearestGameObject(9344);
+					targetObject=utils.findNearestGameObject(9379);
 					if(targetObject!=null){
 						targetMenu = new MenuEntry("","",targetObject.getId(),3,targetObject.getSceneMinLocation().getX(),targetObject.getSceneMinLocation().getY(),false);
 						utils.delayMouseClick(targetObject.getConvexHull().getBounds(), sleepDelay());
