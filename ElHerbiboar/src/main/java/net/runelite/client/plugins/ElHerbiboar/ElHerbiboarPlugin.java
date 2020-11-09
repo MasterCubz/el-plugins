@@ -168,7 +168,7 @@ public class ElHerbiboarPlugin extends Plugin
 	private int tickTimer;
 	private ElHerbiboarState status;
 	private TileObject lastTileObject;
-	private boolean clickSecondObject;
+	private final List<TileObject> objectsToClick = new ArrayList<TileObject>();
 
 	@Provides
 	ElHerbiboarConfig provideConfig(ConfigManager configManager)
@@ -215,6 +215,7 @@ public class ElHerbiboarPlugin extends Plugin
 		log.info("button {} pressed!", configButtonClicked.getKey());
 		if (configButtonClicked.getKey().equals("startButton"))
 		{
+			setValues();
 			if (!startHerbiboar)
 			{
 				startHerbiboar = true;
@@ -228,7 +229,7 @@ public class ElHerbiboarPlugin extends Plugin
 
 	private void setValues()
 	{
-
+		objectsToClick.clear();
 	}
 
 	private void updateTrailData()
@@ -493,7 +494,11 @@ public class ElHerbiboarPlugin extends Plugin
 						}
 						targetTile = utils.findNearestGameObject(startIds);
 						if(targetTile!=null){
-							utils.setMenuEntry(new MenuEntry("","",targetTile.getId(),3,targetTile.getLocalLocation().getSceneX(),targetTile.getLocalLocation().getSceneY(),false));
+							if(targetTile.getId()==30523){
+								utils.setMenuEntry(new MenuEntry("","",targetTile.getId(),3,targetTile.getLocalLocation().getSceneX()+1,targetTile.getLocalLocation().getSceneY(),false));
+							} else {
+								utils.setMenuEntry(new MenuEntry("","",targetTile.getId(),3,targetTile.getLocalLocation().getSceneX(),targetTile.getLocalLocation().getSceneY(),false));
+							}
 							utils.delayMouseClick(getRandomNullPoint(),sleepDelay());
 							return;
 						}
@@ -516,7 +521,14 @@ public class ElHerbiboarPlugin extends Plugin
 						}
 					});
 				}
-
+				if(!objectsToClick.isEmpty()){
+					utils.setMenuEntry(new MenuEntry("","",objectsToClick.get(0).getId(),3,objectsToClick.get(0).getLocalLocation().getSceneX(),objectsToClick.get(0).getLocalLocation().getSceneY(),false));
+					if(objectsToClick.get(0).getClickbox().getBounds()!=null){
+						utils.delayMouseClick(objectsToClick.get(0).getClickbox().getBounds(),sleepDelay());
+					} else {
+						utils.delayMouseClick(getRandomNullPoint(),sleepDelay());
+					}
+				}
 				// Draw trail objects (mushrooms, mud, etc)
 				if (config.isObjectShown() && !(finishId > 0 || currentGroup == null))
 				{
@@ -524,7 +536,9 @@ public class ElHerbiboarPlugin extends Plugin
 					{
 						WorldPoint correct = Iterables.getLast(getCurrentPath()).getLocation();
 						TileObject object = getTrailObjects().get(correct);
-						log.info("2:" + "id:" + object.getId() + "x:" + object.getLocalLocation().getSceneX() + "y:" + object.getLocalLocation().getSceneY());
+						objectsToClick.add(object);
+						utils.sendGameMessage("1. adding game object: " + object.getId());
+						//log.info("2:" + "id:" + object.getId() + "x:" + object.getLocalLocation().getSceneX() + "y:" + object.getLocalLocation().getSceneY());
 						//orange
 					}
 					else
@@ -532,7 +546,9 @@ public class ElHerbiboarPlugin extends Plugin
 						for (WorldPoint trailLoc : ElHerbiboarSearchSpot.getGroupLocations(getCurrentGroup()))
 						{
 							TileObject object = getTrailObjects().get(trailLoc);
-							log.info("3:" + "id:" + object.getId() + "x:" + object.getLocalLocation().getSceneX() + "y:" + object.getLocalLocation().getSceneY());
+							objectsToClick.add(object);
+							utils.sendGameMessage("2. adding game object: " + object.getId());
+							//log.info("3:" + "id:" + object.getId() + "x:" + object.getLocalLocation().getSceneX() + "y:" + object.getLocalLocation().getSceneY());
 							//black
 						}
 					}
@@ -543,7 +559,9 @@ public class ElHerbiboarPlugin extends Plugin
 				{
 					WorldPoint finishLoc = getEndLocations().get(finishId - 1);
 					TileObject object = getTunnels().get(finishLoc);
-					log.info("4:" + "id:" + object.getId() + "x:" + object.getLocalLocation().getSceneX() + "y:" + object.getLocalLocation().getSceneY());
+					utils.sendGameMessage("3. adding game object: " + object.getId());
+					objectsToClick.add(object);
+					//log.info("4:" + "id:" + object.getId() + "x:" + object.getLocalLocation().getSceneX() + "y:" + object.getLocalLocation().getSceneY());
 				}
 				break;
 		}
