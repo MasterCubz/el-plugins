@@ -215,7 +215,6 @@ public class ElGemMinePlugin extends Plugin
 		if (targetObject != null)
 		{
 			targetMenu=new MenuEntry("","",targetObject.getId(),3,targetObject.getSceneMinLocation().getX(),targetObject.getSceneMinLocation().getY(),false);
-			utils.setMenuEntry(targetMenu);
 			utils.delayMouseClick(targetObject.getConvexHull().getBounds(), sleepDelay());
 		}
 		else
@@ -300,8 +299,7 @@ public class ElGemMinePlugin extends Plugin
 					break;
 				case DEPOSIT_ITEMS:
 					targetMenu = new MenuEntry("","",1,57,-1,12582916,false);
-					utils.setMenuEntry(targetMenu);
-					utils.delayMouseClick(new Point(0,0),sleepDelay());
+					utils.delayMouseClick(client.getWidget(192,4).getBounds(),sleepDelay());
 					timeout = tickDelay();
 					break;
 			}
@@ -416,13 +414,17 @@ public class ElGemMinePlugin extends Plugin
 	private void mineRock(int id, int x, int y){
 		LocalPoint local = LocalPoint.fromWorld(client,x,y);
 		targetMenu = new MenuEntry ("Mine", "<col=ff9040>Rocks",id,3,local.getSceneX(),local.getSceneY(),false);
-		utils.setMenuEntry(targetMenu);
 		utils.delayMouseClick(new Point(0,0),sleepDelay());
 	}
 
 	@Subscribe
 	private void onMenuOptionClicked(MenuOptionClicked event){
 		log.debug(event.toString());
+		if(targetMenu!=null){
+			event.consume();
+			client.invokeMenuAction(targetMenu.getOption(),targetMenu.getOption(),targetMenu.getIdentifier(),targetMenu.getOpcode(),targetMenu.getParam0(),targetMenu.getParam1());
+			targetMenu=null;
+		}
 	}
 
 	@Subscribe
@@ -448,7 +450,6 @@ public class ElGemMinePlugin extends Plugin
 				for(TileItem tileItem : tile.getGroundItems()){
 					if(REQUIRED_ITEMS.contains(tileItem.getId())){
 						targetMenu = new MenuEntry ("Take", "<col=ff9040>",tileItem.getId(),20,tileItem.getTile().getX(),tileItem.getTile().getY(),false);
-						utils.setMenuEntry(targetMenu);
 						utils.delayMouseClick(new Point(0,0),sleepDelay());
 						return true;
 					}
