@@ -264,7 +264,7 @@ public class ElTutorialPlugin extends Plugin
 								break;
 							}
 						} else if(config.female()){
-							makeFemale();
+							changeLook(44499010);
 							tutorialSectionProgress++;
 							break;
 						} else if(!config.female()){
@@ -274,20 +274,20 @@ public class ElTutorialPlugin extends Plugin
 						break;
 					case 1:
 					case 2:
-						changeLook(17629290);
+						changeLook(44498956);
 						tutorialSectionProgress++;
 						break;
 					case 3:
-						changeLook(17629311);
+						changeLook(44498991);
 						tutorialSectionProgress++;
 						break;
 					case 4:
 					case 5:
-						changeLook(17629306);
+						changeLook(44498995);
 						tutorialSectionProgress++;
 						break;
 					case 6:
-						changeLook(17629283);
+						changeLook(44499012);
 						break;
 				}
 				break;
@@ -307,17 +307,6 @@ public class ElTutorialPlugin extends Plugin
 					}
 				}
 				break;
-			case 7:
-				switch(tutorialSectionProgress){
-					case 0:
-						talkNPC(3308);
-						tutorialSectionProgress++;
-						break;
-					case 1:
-						pressSpace();
-						break;
-				}
-				break;
 			case 3:
 				switch(tutorialSectionProgress){
 					case 0:
@@ -326,6 +315,21 @@ public class ElTutorialPlugin extends Plugin
 						break;
 					case 1:
 						openTab(10747945);
+						break;
+				}
+				break;
+			case 7:
+				if(client.getWidget(548,3)!=null && !client.getWidget(548,3).isHidden()){
+					openTab(17104930);
+					break;
+				}
+				switch(tutorialSectionProgress){
+					case 0:
+						talkNPC(3308);
+						tutorialSectionProgress++;
+						break;
+					case 1:
+						pressSpace();
 						break;
 				}
 				break;
@@ -824,9 +828,17 @@ public class ElTutorialPlugin extends Plugin
 						tutorialSectionProgress++;
 						break;
 					case 4:
+						if(client.getWidget(219,1)!=null && client.getWidget(219,1).getChild(1).getText().contains("Iron")){
+							pressOption(3);
+							break;
+						}
 						pressSpace();
 						break;
 				}
+				break;
+			case 1000:
+				utils.logout();
+				startTutorial=false;
 				break;
 			default:
 				return UNKNOWN;
@@ -895,15 +907,9 @@ public class ElTutorialPlugin extends Plugin
 		}
 	}
 
-	private void makeFemale()
-	{
-		targetMenu = new MenuEntry("","",0,24,0,17629321,false);
-		utils.delayMouseClick(getRandomNullPoint(), sleepDelay());
-	}
-
 	private void changeLook(int id)
 	{
-		targetMenu = new MenuEntry("","",0,24,0,id,false);
+		targetMenu = new MenuEntry("","",1,57,-1,id,false);
 		utils.delayMouseClick(getRandomNullPoint(), sleepDelay());
 	}
 
