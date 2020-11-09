@@ -91,14 +91,14 @@ class ElHerbiboarOverlay extends Overlay
 			{
 				WorldPoint correct = Iterables.getLast(plugin.getCurrentPath()).getLocation();
 				TileObject object = plugin.getTrailObjects().get(correct);
-				drawObjectLocation(graphics, object, config.getObjectColor());
+				drawObjectLocation(graphics, object, Color.ORANGE);
 			}
 			else
 			{
 				for (WorldPoint trailLoc : ElHerbiboarSearchSpot.getGroupLocations(plugin.getCurrentGroup()))
 				{
 					TileObject object = plugin.getTrailObjects().get(trailLoc);
-					drawObjectLocation(graphics, object, config.getObjectColor());
+					drawObjectLocation(graphics, object, Color.BLACK);
 				}
 			}
 		}

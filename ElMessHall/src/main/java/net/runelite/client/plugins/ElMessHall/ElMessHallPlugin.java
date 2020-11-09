@@ -576,6 +576,7 @@ public class ElMessHallPlugin extends Plugin
 
 	@Subscribe
 	private void onMenuOptionClicked(MenuOptionClicked event){
+
 		log.debug(event.toString());
 		if(targetMenu!=null){
 			event.consume();

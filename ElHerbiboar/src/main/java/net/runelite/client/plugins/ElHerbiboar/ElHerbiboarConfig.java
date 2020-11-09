@@ -26,11 +26,8 @@
 package net.runelite.client.plugins.ElHerbiboar;
 
 import java.awt.Color;
-import net.runelite.client.config.Config;
-import net.runelite.client.config.ConfigGroup;
-import net.runelite.client.config.ConfigItem;
-import net.runelite.client.config.ConfigTitleSection;
-import net.runelite.client.config.Title;
+
+import net.runelite.client.config.*;
 
 @ConfigGroup("ElHerbiboar")
 public interface ElHerbiboarConfig extends Config
@@ -174,5 +171,179 @@ public interface ElHerbiboarConfig extends Config
 	default Color getTrailColor()
 	{
 		return Color.WHITE;
+	}
+
+	@ConfigTitleSection(
+			keyName = "delayTitle",
+			name = "Delay Config",
+			description = "",
+			position = 40
+	)
+	default Title delayTitle()
+	{
+		return new Title();
+	}
+
+	@ConfigItem(
+			keyName = "customDelays",
+			name = "Use Custom Delays",
+			description = "Click here to use custom delays",
+			position = 40,
+			titleSection = "delayTitle"
+	)
+	default boolean customDelays()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+			keyName = "sleepMin",
+			name = "Sleep Min",
+			description = "Enter minimum sleep delay here.",
+			position = 41,
+			titleSection = "delayTitle",
+			hidden=true,
+			unhide="customDelays"
+	)
+	default int sleepMin()
+	{
+		return 60;
+	}
+
+	@ConfigItem(
+			keyName = "sleepMax",
+			name = "Sleep Max",
+			description = "Enter maximum sleep delay here.",
+			position = 42,
+			titleSection = "delayTitle",
+			hidden=true,
+			unhide="customDelays"
+	)
+	default int sleepMax()
+	{
+		return 350;
+	}
+
+	@ConfigItem(
+			keyName = "sleepDeviation",
+			name = "Sleep Deviation",
+			description = "Enter sleep delay deviation here.",
+			position = 43,
+			titleSection = "delayTitle",
+			hidden=true,
+			unhide="customDelays"
+	)
+	default int sleepDeviation()
+	{
+		return 100;
+	}
+
+	@ConfigItem(
+			keyName = "sleepTarget",
+			name = "Sleep Target",
+			description = "Enter target sleep delay here.",
+			position = 44,
+			titleSection = "delayTitle",
+			hidden=true,
+			unhide="customDelays"
+	)
+	default int sleepTarget()
+	{
+		return 100;
+	}
+
+	@ConfigItem(
+			keyName = "sleepWeighted",
+			name = "Sleep Weighted Distribution",
+			description = "Click here to use a weighted distribution.",
+			position = 45,
+			titleSection = "delayTitle",
+			hidden=true,
+			unhide="customDelays"
+	)
+	default boolean sleepWeighted()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+			keyName = "tickMin",
+			name = "Tick Min",
+			description = "Enter minimum tick delay here.",
+			position = 46,
+			titleSection = "delayTitle",
+			hidden=true,
+			unhide="customDelays"
+	)
+	default int tickMin()
+	{
+		return 1;
+	}
+
+	@ConfigItem(
+			keyName = "tickMax",
+			name = "Tick Max",
+			description = "Enter maximum tick delay here.",
+			position = 47,
+			titleSection = "delayTitle",
+			hidden=true,
+			unhide="customDelays"
+	)
+	default int tickMax()
+	{
+		return 3;
+	}
+
+	@ConfigItem(
+			keyName = "tickDeviation",
+			name = "Tick Deviation",
+			description = "Enter tick delay deviation here.",
+			position = 48,
+			titleSection = "delayTitle",
+			hidden=true,
+			unhide="customDelays"
+	)
+	default int tickDeviation()
+	{
+		return 2;
+	}
+
+	@ConfigItem(
+			keyName = "tickTarget",
+			name = "Tick Target",
+			description = "Enter target tick delay here.",
+			position = 49,
+			titleSection = "delayTitle",
+			hidden=true,
+			unhide="customDelays"
+	)
+	default int tickTarget()
+	{
+		return 2;
+	}
+
+	@ConfigItem(
+			keyName = "tickWeighted",
+			name = "Tick Weighted Distribution",
+			description = "Click here to use a weighted distribution.",
+			position = 50,
+			titleSection = "delayTitle",
+			hidden=true,
+			unhide="customDelays"
+	)
+	default boolean tickWeighted()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+			keyName = "startButton",
+			name = "Start/Stop",
+			description = "Test button that changes variable value",
+			position = 150
+	)
+	default Button startButton()
+	{
+		return new Button();
 	}
 }

@@ -28,6 +28,10 @@ version = "0.0.2"
 project.extra["PluginName"] = "El Herbiboar"
 project.extra["PluginDescription"] = "Does herbiboar for you."
 
+dependencies {
+    compileOnly(group = "com.openosrs.externals", name = "botutils", version = "4.9.1+");
+}
+
 tasks {
     jar {
         manifest {
@@ -35,6 +39,10 @@ tasks {
                     "Plugin-Version" to project.version,
                     "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
                     "Plugin-Provider" to project.extra["PluginProvider"],
+                    "Plugin-Dependencies" to
+                            arrayOf(
+                                    "botutils-plugin"
+                            ).joinToString(),
                     "Plugin-Description" to project.extra["PluginDescription"],
                     "Plugin-License" to project.extra["PluginLicense"]
             ))

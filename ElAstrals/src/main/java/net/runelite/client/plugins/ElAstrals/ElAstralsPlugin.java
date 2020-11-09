@@ -648,7 +648,7 @@ public class ElAstralsPlugin extends Plugin
 				log.info(String.valueOf(client.getVarbitValue(173)));
 				if(client.getWidget(160,27).getSpriteId()==1069){ //if run is off
 					targetMenu = new MenuEntry("Toggle Run","",1,57,-1,10485782,false);
-					utils.delayMouseClick(getRandomNullPoint(),sleepDelay());
+					utils.delayMouseClick(client.getWidget(160,27).getBounds(),sleepDelay());
 					return;
 				}
 			}
