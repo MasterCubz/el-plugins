@@ -9,6 +9,7 @@ import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.ConfigButtonClicked;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.MenuOptionClicked;
+import net.runelite.api.queries.GameObjectQuery;
 import net.runelite.api.queries.TileQuery;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -22,6 +23,8 @@ import org.pf4j.Extension;
 import net.runelite.client.plugins.botutils.BotUtils;
 import java.awt.*;
 import java.time.Instant;
+
+import static net.runelite.client.plugins.botutils.Banks.BANK_SET;
 
 @Extension
 @PluginDependency(BotUtils.class)
@@ -307,14 +310,20 @@ public class ElSuperglassPlugin extends Plugin
 
 	private void openNearestBank()
 	{
-		log.info("openNearestBank called.");
-		GameObject targetObject = utils.findNearestBank();
-		if(targetObject!=null){
-			targetMenu = new MenuEntry("","",targetObject.getId(),4,targetObject.getLocalLocation().getSceneX(),targetObject.getLocalLocation().getSceneY(),false);
+		if(config.grandExchange()){
+			NPC targetNPC = utils.findNearestNpc("Banker");
+			targetMenu=new MenuEntry("Bank","<col=ffff00>Banker",targetNPC.getIndex(),11,0,0,false);
 			utils.delayMouseClick(getRandomNullPoint(),sleepDelay());
 			return;
 		}
-
+		GameObject targetObject = new GameObjectQuery()
+				.idEquals(BANK_SET)
+				.result(client)
+				.nearestTo(client.getLocalPlayer());
+		if(targetObject!=null){
+			targetMenu = new MenuEntry("","",targetObject.getId(),4,targetObject.getLocalLocation().getSceneX(),targetObject.getLocalLocation().getSceneY(),false);
+			utils.delayMouseClick(getRandomNullPoint(),sleepDelay());
+		}
 	}
 
 	private Point getRandomNullPoint()
@@ -322,9 +331,9 @@ public class ElSuperglassPlugin extends Plugin
 		if(client.getWidget(161,34)!=null){
 			Rectangle nullArea = client.getWidget(161,34).getBounds();
 			return new Point ((int)nullArea.getX()+utils.getRandomIntBetweenRange(0,nullArea.width), (int)nullArea.getY()+utils.getRandomIntBetweenRange(0,nullArea.height));
+		} else {
+			return new Point(0,0);
 		}
-
-		return new Point(client.getCanvasWidth()-utils.getRandomIntBetweenRange(0,2),client.getCanvasHeight()-utils.getRandomIntBetweenRange(0,2));
 	}
 
 	private void updateLeftValues()

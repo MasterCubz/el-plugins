@@ -109,6 +109,17 @@ public interface ElSuperglassConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "grandExchange",
+			name = "Grand Exchange Bank",
+			description = "Banks in the grand exchange.",
+			position = 10
+	)
+	default boolean grandExchange()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 			keyName = "enableUI",
 			name = "Enable UI",
 			description = "Enable to turn on in game UI",
